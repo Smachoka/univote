@@ -10,12 +10,10 @@ use App\Http\Controllers\HomeController;
 | Authentication Routes
 |--------------------------------------------------------------------------
 */
-Auth::routes(['register' => false]); // Disable public registration; admin creates accounts
+Auth::routes(['register' => false]);
 
-// Public homepage (accessible to everyone, logged in or not)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Redirect based on role (for backward compatibility or additional routing)
 Route::get('/dashboard-redirect', function () {
     if (auth()->check()) {
         return auth()->user()->isAdmin()
@@ -52,9 +50,9 @@ Route::middleware(['auth', 'admin'])
         Route::prefix('elections/{election}/positions')
             ->name('elections.positions.')
             ->group(function () {
-                Route::get('/', [Admin\PositionController::class, 'index'])->name('index');
-                Route::get('/create', [Admin\PositionController::class, 'create'])->name('create');
-                Route::post('/', [Admin\PositionController::class, 'store'])->name('store');
+                Route::get('/',              [Admin\PositionController::class, 'index'])->name('index');
+                Route::get('/create',        [Admin\PositionController::class, 'create'])->name('create');
+                Route::post('/',             [Admin\PositionController::class, 'store'])->name('store');
                 Route::delete('/{position}', [Admin\PositionController::class, 'destroy'])->name('destroy');
             });
 
@@ -62,18 +60,57 @@ Route::middleware(['auth', 'admin'])
         Route::prefix('elections/{election}/positions/{position}/candidates')
             ->name('elections.positions.candidates.')
             ->group(function () {
-                Route::get('/create', [Admin\CandidateController::class, 'create'])->name('create');
-                Route::post('/', [Admin\CandidateController::class, 'store'])->name('store');
-                Route::get('/{candidate}', [Admin\CandidateController::class, 'show'])->name('show');
-                Route::get('/{candidate}/edit', [Admin\CandidateController::class, 'edit'])->name('edit');
-                Route::put('/{candidate}', [Admin\CandidateController::class, 'update'])->name('update');
-                Route::patch('/{candidate}/approve', [Admin\CandidateController::class, 'approve'])->name('approve');
-                Route::delete('/{candidate}', [Admin\CandidateController::class, 'destroy'])->name('destroy');
+                Route::get('/create',              [Admin\CandidateController::class, 'create'])->name('create');
+                Route::post('/',                   [Admin\CandidateController::class, 'store'])->name('store');
+                Route::get('/{candidate}',         [Admin\CandidateController::class, 'show'])->name('show');
+                Route::get('/{candidate}/edit',    [Admin\CandidateController::class, 'edit'])->name('edit');
+                Route::put('/{candidate}',         [Admin\CandidateController::class, 'update'])->name('update');
+                Route::patch('/{candidate}/approve',[Admin\CandidateController::class, 'approve'])->name('approve');
+                Route::delete('/{candidate}',      [Admin\CandidateController::class, 'destroy'])->name('destroy');
             });
 
         // Results
         Route::get('elections/{election}/results', [Admin\ResultController::class, 'show'])
             ->name('elections.results');
+
+        /*
+        |----------------------------------------------------------------------
+        | Student Import Routes
+        |----------------------------------------------------------------------
+        */
+        Route::prefix('students/import')
+            ->name('students.import.')
+            ->group(function () {
+                Route::get('/',             [Admin\StudentImportController::class, 'index'])->name('index');
+                Route::post('/preview',     [Admin\StudentImportController::class, 'preview'])->name('preview');
+                Route::post('/',            [Admin\StudentImportController::class, 'store'])->name('store');
+                Route::get('/{log}/status', [Admin\StudentImportController::class, 'status'])->name('status');
+                Route::get('/{log}/errors', [Admin\StudentImportController::class, 'downloadErrors'])->name('errors');
+                Route::delete('/{log}', [Admin\StudentImportController::class, 'destroy'])->name('destroy');
+                Route::get('/template', function () {
+                    $headers = [
+                        'Content-Type'        => 'text/csv',
+                        'Content-Disposition' => 'attachment; filename="students_import_template.csv"',
+                    ];
+                    $content  = "name,email,student_id\n";
+                    $content .= "John Smith,john.smith@university.edu,STU001\n";
+                    $content .= "Jane Doe,jane.doe@university.edu,STU002\n";
+                    return response($content, 200, $headers);
+                })->name('template');
+            });
+
+        /*
+        |----------------------------------------------------------------------
+        | Settings Routes
+        |----------------------------------------------------------------------
+        */
+        Route::prefix('settings')
+            ->name('settings.')
+            ->group(function () {
+                Route::get('/',         [Admin\SettingsController::class, 'index'])->name('index');
+                Route::put('/',         [Admin\SettingsController::class, 'update'])->name('update');
+                Route::post('/test-mail',[Admin\SettingsController::class, 'testMail'])->name('test-mail');
+            });
     });
 
 /*
