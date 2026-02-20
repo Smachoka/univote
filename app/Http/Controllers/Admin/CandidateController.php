@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 class CandidateController extends Controller
 {
-  public function create(Election $election, Position $position)
-{
-    return view('admin.elections.positions.candidates.create', compact('election', 'position'));
-}
+    public function create(Election $election, Position $position)
+    {
+        return view('admin.candidates.create', compact('election', 'position'));
+    }
 
     public function store(Request $request, Election $election, Position $position)
 {
