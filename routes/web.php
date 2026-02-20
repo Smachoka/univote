@@ -135,3 +135,9 @@ Route::middleware(['auth', 'student'])
         Route::get('/elections/{election}/confirmation', [Student\VoteController::class, 'confirmation'])
             ->name('confirmation');
     });
+
+Route::get('/setup', function() {
+    Artisan::call('migrate --force');
+    Artisan::call('db:seed --force');
+    return "Setup complete!<br>Admin: admin@university.edu / password<br>Student accounts also created.";
+});
