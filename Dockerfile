@@ -54,7 +54,7 @@ RUN chown -R www-data:www-data /var/www/html \
 # Copy nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Copy startup script
+# Copy startup script v2
 COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
