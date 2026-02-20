@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     unzip \
     git \
     mysql-client \
-    postgresql-dev \  # Added for PostgreSQL
+    postgresql-dev \
     libpng-dev \
     libzip-dev \
     oniguruma-dev \
@@ -20,8 +20,8 @@ RUN apk add --no-cache \
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
-    pdo_pgsql \  # Added for PostgreSQL
-    pgsql \       # Added for PostgreSQL
+    pdo_pgsql \
+    pgsql \
     mbstring \
     exif \
     pcntl \
