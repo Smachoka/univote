@@ -136,8 +136,4 @@ Route::middleware(['auth', 'student'])
             ->name('confirmation');
     });
 
-Route::get('/setup', function() {
-    Artisan::call('migrate --force');
-    Artisan::call('db:seed --force');
-    return "Setup complete!<br>Admin: admin@university.edu / password<br>Student accounts also created.";
-});
+
