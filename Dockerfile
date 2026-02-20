@@ -10,6 +10,7 @@ RUN apk add --no-cache \
     unzip \
     git \
     mysql-client \
+    postgresql-dev \  # Added for PostgreSQL
     libpng-dev \
     libzip-dev \
     oniguruma-dev \
@@ -19,6 +20,8 @@ RUN apk add --no-cache \
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
+    pdo_pgsql \  # Added for PostgreSQL
+    pgsql \       # Added for PostgreSQL
     mbstring \
     exif \
     pcntl \
@@ -54,7 +57,7 @@ RUN chown -R www-data:www-data /var/www/html \
 # Copy nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
-# Copy startup script v2
+# Copy startup script
 COPY docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
