@@ -135,5 +135,11 @@ Route::middleware(['auth', 'student'])
         Route::get('/elections/{election}/confirmation', [Student\VoteController::class, 'confirmation'])
             ->name('confirmation');
     });
-
+Route::get('/debug-logs', function() {
+    $logFile = storage_path('logs/laravel.log');
+    if (file_exists($logFile)) {
+        return nl2br(file_get_contents($logFile));
+    }
+    return "Log file not found";
+});
 
